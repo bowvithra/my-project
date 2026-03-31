@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Business Recommender - Innovation Hub</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--primary-gradient:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+--success-gradient:linear-gradient(45deg,#28a745,#20c997);
+--ai-gradient:linear-gradient(45deg,#ff6b6b,#ffa500);
+}
+*{font-family:'Poppins',sans-serif;}
+body{background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);min-height:100vh;}
+.navbar-custom{background:var(--primary-gradient);box-shadow:0 10px 30px rgba(0,0,0,0.2);padding:1rem 0;}
+.navbar-custom .nav-link{color:white!important;margin:0 1rem;}
+.ai-hero{background:var(--primary-gradient);color:white;padding:4rem 0;border-radius:0 0 50px 50px;margin-bottom:3rem;}
+.business-card{border:none;border-radius:20px;overflow:hidden;transition:.4s;box-shadow:0 10px 30px rgba(0,0,0,0.1);position:relative;}
+.business-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.2);}
+.business-card img{height:400px;object-fit:cover;}
+.ai-badge{position:absolute;top:15px;right:15px;background:var(--ai-gradient);color:white;padding:.5rem 1rem;border-radius:20px;font-size:.8rem;}
+.investment-badge{background:var(--success-gradient);color:white;padding:.4rem 1rem;border-radius:20px;font-size:.9rem;}
+.success-rate{background:#e8f5e9;border:2px solid #a5d6a7;color:#2e7d32;padding:.3rem .8rem;border-radius:15px;font-size:.85rem;}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+<div class="container">
+<a class="navbar-brand text-white fw-bold" href="home">
+<i class="fas fa-robot"></i> SmartBiz AI
+</a>
+
+<div class="collapse navbar-collapse">
+<ul class="navbar-nav ms-auto">
+<li><a class="nav-link" href="/home">🏠Home</a></li>
+<li><a class="nav-link" href="/recommendations">🤖AI Recommendations</a></li>
+<li><a class="nav-link active" href="/innovationhub">💡Innovation Hub</a></li>
+<li><a class="nav-link" href="/admin">⚙️Admin</a></li>
+</ul>
+</div>
+</div>
+</nav>
+
+<section class="ai-hero">
+<div class="container">
+<h1 class="display-4 fw-bold">AI-Powered Innovation Hub</h1>
+<p>Smart business ideas powered by AI</p>
+</div>
+</section>
+
+<div class="container">
+<div class="row g-4 mb-5" id="businessGrid"></div>
+</div>
+
+<div class="modal fade" id="businessModal">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header bg-primary text-white">
+<h5 class="modal-title">AI Business Analysis</h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body" id="modalContent"></div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+// ✅ ADD EXPLANATION DATA
+const businessData=[
+{
+name:"Cloud Kitchen",
+investment:"₹5L-₹10L",
+successRate:92,
+img:"/static/images/cloudkitchen.jpg",
+desc:"Low-cost food business with high online demand. Perfect for Swiggy/Zomato based income."
+},
+
+{
+name:"EV Charging Station",
+investment:"₹10L-₹20L",
+successRate:88,
+img:"/static/images/electricvehiclechargingstation.jpg",
+desc:"Growing EV market makes this a future-proof business with steady long-term income."
+},
+
+{
+name:"3D Printing Shop",
+investment:"₹6L-₹12L",
+successRate:85,
+img:"/static/images/3dprintingshop.jpg",
+desc:"High demand in prototyping and custom products. Ideal for tech-driven areas."
+},
+
+{
+name:"Drone Delivery",
+investment:"₹8L-₹15L",
+successRate:78,
+img:"/static/images/dronedelivery.jpg",
+desc:"Emerging delivery system with fast logistics. Best for urban & medical delivery services."
+},
+
+{
+name:"Smart Vending hub",
+investment:"₹4L-₹8L",
+successRate:94,
+img:"/static/images/smartvendingmachinehub.jpg",
+desc:"24/7 automated sales with low staff cost. Works great in high footfall areas."
+},
+
+{
+name:"Electric Bike Rental shop",
+investment:"₹5L-₹9L",
+successRate:90,
+img:"/static/images/electricbikerentalshop.jpg",
+desc:"Eco-friendly travel option with high demand in cities and tourist areas."
+},
+
+{
+name:"Home Automation Store",
+investment:"₹6L-₹12L",
+successRate:87,
+img:"/static/images/homeautomationstore.jpg",
+desc:"Smart homes are trending. Sell automation devices and installation services."
+},
+
+{
+name:"Internet Cafe",
+investment:"₹3L-₹6L",
+successRate:96,
+img:"/static/images/Internetcafe.jpg",
+desc:"Still profitable in student areas for printing, browsing, and online exams."
+},
+
+{
+name:"Software Training Center",
+investment:"₹7L-₹15L",
+successRate:89,
+img:"/static/images/softwaretrainingcenter.jpg",
+desc:"High demand for IT skills like Python, AI, and web development."
+},
+
+{
+name:"Online Grocery",
+investment:"₹5L-₹10L",
+successRate:91,
+img:"/static/images/onlinegrocerystore.jpg",
+desc:"Daily essential business with repeat customers and strong local demand."
+},
+
+{
+name:"Space Tourism Booking Agency",
+investment:"₹8L-₹20L",
+successRate:82,
+img:"/static/images/spacetourismbookingagency.jpg",
+desc:"Futuristic niche market with premium customers and high commission potential."
+},
+
+{
+name:"Subscription Toy Library for Kids",
+investment:"₹3L-₹7L",
+successRate:91,
+img:"/static/images/subscriptiontoylibraryforkids.jpg",
+desc:"Parents prefer renting toys. Recurring monthly income model."
+},
+
+{
+name:"Fix-it cafe",
+investment:"₹2L-₹5L",
+successRate:88,
+img:"/static/images/fix-itcafe.jpg",
+desc:"Repair culture business. Fix electronics, bikes, and gadgets."
+},
+
+{
+name:"Underground Urban Farming",
+investment:"₹6L-₹12L",
+successRate:86,
+img:"/static/images/undergroundurbanfarming.jpg",
+desc:"Organic food demand is rising. Controlled farming gives high yield."
+},
+
+{
+name:"Clothing Repair & Customization",
+investment:"₹2L-₹6L",
+successRate:93,
+img:"/static/images/clothingrepair&customization.jpg",
+desc:"Low investment tailoring business with high demand for custom fashion."
+},
+
+{
+name:"Refill Station Store",
+investment:"₹4L-₹9L",
+successRate:90,
+img:"/static/images/refillstationstore.jpg",
+desc:"Eco-friendly store reducing plastic waste. Growing awareness boosts demand."
+}
+];
+
+
+// ✅ UPDATED CARD UI (added desc + investment badge)
+function generateRecommendations(city){
+const grid=document.getElementById("businessGrid");
+grid.innerHTML="";
+
+businessData.forEach(business=>{
+grid.innerHTML+=`
+<div class="col-lg-4">
+<div class="card business-card">
+
+<img src="${business.img}" class="card-img-top">
+
+<div class="card-body">
+
+<h5>${business.name}</h5>
+
+<p style="font-size:14px;color:#555;">
+${business.desc}
+</p>
+
+<div class="mb-2">
+<span class="investment-badge">
+Investment: ${business.investment}
+</span>
+</div>
+
+<button class="btn btn-primary w-100"
+onclick="showBusinessDetails('${business.name}','${city}')">
+View Details
+</button>
+
+</div>
+</div>
+</div>`;
+});
+}
+
+
+// ✅ UPDATED MODAL (full details)
+function showBusinessDetails(name,city){
+
+const business = businessData.find(b => b.name === name);
+
+document.getElementById("modalContent").innerHTML=`
+<h4>${business.name}</h4>
+
+<p><b>Location Suitability:</b> Best for ${city}</p>
+
+<p><b>Explanation:</b> ${business.desc}</p>
+
+<p><b>Investment Required:</b> ${business.investment}</p>
+
+<p><b>Success Rate:</b> ${business.successRate}%</p>
+
+<p><b>Why this business?</b><br>
+This business has strong demand, scalable growth, and suits modern market trends in ${city}.
+</p>
+`;
+
+new bootstrap.Modal(document.getElementById("businessModal")).show();
+}
+
+
+// BACKEND SAME (no change)
+document.addEventListener("DOMContentLoaded", function() {
+
+fetch("http://127.0.0.1:5001/recommend", {
+method: "POST",
+headers: {"Content-Type": "application/json"},
+body: JSON.stringify({
+location: "chennai",
+area_type: "mixed",
+population_density: "high population",
+footfall: "high footfall"
+})
+})
+.then(res => res.json())
+.then(data => {
+generateRecommendations(data.location || "Chennai");
+})
+.catch(() => {
+generateRecommendations("Chennai");
+});
+
+});
+
+</script>
+
+</body>
+</html>

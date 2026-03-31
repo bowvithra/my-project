@@ -1,0 +1,26 @@
+location,area_type,population_density,footfall,rent_level,competition,lat,lon
+Tambaram,residential,7000,5500,low,medium,12.9249,80.1000
+Velachery,residential,7600,6200,medium,medium,12.9756,80.2206
+T Nagar,commercial,9000,8500,high,high,13.0418,80.2341
+Anna Nagar,commercial,8200,7000,high,high,13.0878,80.2102
+Adyar,residential,7500,6400,medium,medium,13.0067,80.2575
+Porur,mixed,6500,5200,medium,low,13.0382,80.1565
+Guindy,commercial,8300,7800,high,high,13.0100,80.2120
+OMR,commercial,8700,8000,high,medium,12.9120,80.2295
+Perungudi,commercial,8000,7500,high,medium,12.9600,80.2450
+Sholinganallur,mixed,7200,6800,medium,medium,12.9010,80.2279
+Medavakkam,residential,6900,5300,low,medium,12.9229,80.1817
+Chromepet,residential,7100,6000,medium,medium,12.9516,80.1462
+Pallavaram,mixed,6800,5900,medium,medium,12.9675,80.1491
+Kodambakkam,commercial,8200,7200,high,high,13.0526,80.2253
+Nungambakkam,commercial,8500,7600,high,high,13.0604,80.2425
+Egmore,commercial,8400,7400,high,high,13.0732,80.2609
+Mylapore,commercial,8300,7300,high,medium,13.0336,80.2697
+Besant Nagar,residential,7200,6500,medium,medium,13.0003,80.2668
+Tambaram East,residential,6900,5400,low,medium,12.9279,80.1150
+Tambaram West,residential,6800,5300,low,medium,12.9220,80.0950
+Ambattur,industrial,7500,6200,medium,medium,13.1143,80.1548
+Avadi,mixed,7000,5600,low,medium,13.1147,80.1018
+Poonamallee,mixed,6600,5000,low,low,13.0489,80.1090
+Koyambedu,commercial,8800,8200,high,high,13.0736,80.1943
+Vadapalani,commercial,8300,7100,high,high,13.0500,80.2120

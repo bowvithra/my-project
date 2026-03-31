@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Welcome</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+overflow:hidden;
+}
+
+/* container */
+
+.box{
+text-align:center;
+animation: fadeIn 3s ease-in-out;
+}
+
+/* welcome text */
+
+h1{
+font-size:42px;
+margin-bottom:10px;
+animation: slideDown 3s ease;
+}
+
+p{
+font-size:18px;
+opacity:0.8;
+}
+
+/* loading spinner */
+
+.loader{
+margin:30px auto;
+border:6px solid rgba(255,255,255,0.2);
+border-top:6px solid white;
+border-radius:50%;
+width:60px;
+height:60px;
+animation: spin 3s linear infinite;
+}
+
+/* animations */
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+@keyframes slideDown{
+from{
+transform:translateY(-40px);
+opacity:0;
+}
+to{
+transform:translateY(5);
+opacity:1;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1 id="welcomeText"></h1>
+
+<p>AI Driven Location Based Business Recommendation System</p>
+
+<div class="loader"></div>
+
+<p>Loading your experience...</p>
+
+</div>
+
+<script>
+
+let user = localStorage.getItem("loggedUser")
+
+document.getElementById("welcomeText").innerHTML = "Welcome, " + user
+
+setTimeout(function(){
+
+window.location="index.html"
+
+},5000)
+
+</script>
+
+</body>
+</html>

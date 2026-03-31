@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartBiz AI - Recommendations</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+*{font-family:'Poppins',sans-serif;}
+
+body{
+background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+min-height:100vh;
+padding-bottom:2rem;
+padding-top: 80px;
+}
+
+/* HERO */
+.hero-section{
+background:rgba(255,255,255,0.95);
+border-radius:24px;
+padding:2rem;
+margin-top:2rem;
+margin-top:1 rem;
+}
+
+/* INPUT */
+.input-group-custom{
+position:relative;
+height:60px;
+margin-bottom:15px;
+}
+
+.form-control,.form-select{
+height:60px;
+border-radius:16px;
+padding-left:40px;
+}
+
+.input-icon{
+position:absolute;
+left:15px;
+top:50%;
+transform:translateY(-50%);
+color:#667eea;
+}
+
+/* BUTTON */
+.btn-custom{
+height:60px;
+border-radius:16px;
+font-weight:600;
+background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+color:white;
+border:none;
+}
+
+/* AI CARDS */
+.ai-card{
+background:white;
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+border-left:5px solid #667eea;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+opacity:0;
+transform:translateY(20px);
+animation:fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* DROPDOWN */
+.dropdown-menu{
+position:absolute;
+top:100%;
+left:0;
+right:0;
+background:white;
+border-radius:16px;
+max-height:250px;
+overflow-y:auto;
+display:none;
+z-index:1000;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.dropdown-item{
+padding:12px;
+cursor:pointer;
+}
+
+.dropdown-item:hover{
+background:#f1f3ff;
+}
+
+.navbar-custom {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 1rem 0;
+}
+
+.navbar-custom .nav-link {
+    color: white !important;
+    margin: 0 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+<div class="container">
+<a class="navbar-brand text-white fw-bold" href="home">
+<i class="fas fa-robot"></i> SmartBiz AI
+</a>
+
+<div class="collapse navbar-collapse">
+<ul class="navbar-nav ms-auto">
+<li><a class="nav-link" href="/home">🏠Home</a></li>
+<li><a class="nav-link" href="/recommendations">🤖AI Recommendations</a></li>
+<li><a class="nav-link active" href="/innovationhub">💡Innovation Hub</a></li>
+<li><a class="nav-link" href="/admin">⚙️Admin</a></li>
+</ul>
+</div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="hero-section">
+
+<h3 class="mb-4">AI Business Recommendations</h3>
+
+<!-- LOCATION -->
+<div class="input-group-custom">
+<i class="input-icon">📍</i>
+<input id="location" placeholder="Select Location" class="form-control" autocomplete="off">
+<div id="locationDropdown" class="dropdown-menu"></div>
+</div>
+
+<!-- AREA -->
+<div class="input-group-custom">
+<i class="input-icon">🏢</i>
+<select id="areaType" class="form-select">
+<option>Residential</option>
+<option>Commercial</option>
+<option>Mixed</option>
+</select>
+</div>
+
+<!-- POPULATION -->
+<div class="input-group-custom">
+<i class="input-icon">👥</i>
+<select id="population" class="form-select">
+<option>Low Population</option>
+<option>Medium Population</option>
+<option>High Population</option>
+</select>
+</div>
+
+<!-- FOOTFALL -->
+<div class="input-group-custom">
+<i class="input-icon">🚶</i>
+<select id="footfall" class="form-select">
+<option>Low Footfall</option>
+<option>Medium Footfall</option>
+<option>High Footfall</option>
+</select>
+</div>
+
+<button onclick="getRecommendations()" class="btn btn-custom w-100">
+Generate Recommendations
+</button>
+
+</div>
+
+<!-- AI RESULTS -->
+<h3 class="text-white mt-5">🤖 AI Insights</h3>
+<div id="aiResults" class="row mt-3"></div>
+
+</div>
+
+<script>
+
+// ================= AI LOGIC =================
+let renderedLines = new Set();
+let maxCards = 8;
+
+async function getRecommendations(){
+
+const location=document.getElementById("location").value;
+
+if(!location){
+alert("Enter location");
+return;
+}
+
+await fetch("/recommend",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+location:location,
+area_type:document.getElementById("areaType").value,
+population_density:document.getElementById("population").value,
+footfall:document.getElementById("footfall").value
+})
+});
+
+await getAI();
+}
+
+async function getAI(){
+
+const container = document.getElementById("aiResults");
+container.innerHTML = "<p class='text-white'>Generating AI insights...</p>";
+
+renderedLines.clear();
+
+const res = await fetch("/ai-stream",{method:"POST"});
+
+if(!res.ok){
+const text = await res.text();
+container.innerHTML = `<p class='text-danger'>${text}</p>`;
+return;
+}
+
+const reader = res.body.getReader();
+const decoder = new TextDecoder();
+
+let buffer = "";
+
+while(true){
+
+const {done,value} = await reader.read();
+if(done) break;
+
+buffer += decoder.decode(value);
+
+processBuffer(buffer, reader);
+}
+}
+
+function processBuffer(buffer, reader){
+
+const container = document.getElementById("aiResults");
+
+let lines = buffer.split("\n");
+let completeLines = lines.slice(0, -1);
+
+completeLines.forEach(line => {
+
+line = line.trim();
+
+if(renderedLines.size >= maxCards){
+reader.cancel();
+return;
+}
+
+if(!line.includes("-") || renderedLines.has(line)) return;
+
+let parts = line.split("-");
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+let reason = parts.slice(1).join("-").trim();
+
+if(reason.length < 15) return;
+
+renderedLines.add(line);
+
+if(container.innerHTML.includes("Generating")){
+container.innerHTML = "";
+}
+
+let card = document.createElement("div");
+card.className = "col-md-6";
+
+card.innerHTML = `
+<div class="ai-card">
+<h5>${name}</h5>
+<p>${reason}</p>
+</div>
+`;
+
+container.appendChild(card);
+
+});
+}
+
+// ================= DROPDOWN =================
+let locationsList = [];
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadLocations();
+    setupDropdown();
+});
+
+async function loadLocations(){
+    try{
+        const res = await fetch("/locations");
+        const data = await res.json();
+        locationsList = data.locations || [];
+        console.log("📍 Loaded:", locationsList);
+    }catch(e){
+        console.error("Location error:", e);
+    }
+}
+
+function setupDropdown(){
+
+const input = document.getElementById("location");
+const dropdown = document.getElementById("locationDropdown");
+
+input.addEventListener("focus", ()=>{
+    showDropdown(locationsList);
+});
+
+input.addEventListener("input", function(){
+    const query = this.value.toLowerCase();
+    const filtered = locationsList.filter(loc =>
+        loc.toLowerCase().includes(query)
+    );
+    showDropdown(filtered);
+});
+
+function showDropdown(items){
+
+dropdown.innerHTML = "";
+
+if(items.length === 0){
+dropdown.style.display = "none";
+return;
+}
+
+items.forEach(loc=>{
+    const item = document.createElement("div");
+    item.className = "dropdown-item";
+    item.innerHTML = "📍 " + loc;
+
+    item.onclick = ()=>{
+        input.value = loc;
+        dropdown.style.display = "none";
+    };
+
+    dropdown.appendChild(item);
+});
+
+dropdown.style.display = "block";
+}
+
+document.addEventListener("click",(e)=>{
+    if(!input.contains(e.target) && !dropdown.contains(e.target)){
+        dropdown.style.display="none";
+    }
+});
+}
+
+</script>
+
+</body>
+</html>
